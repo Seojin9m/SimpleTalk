@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
+import Header from './components/Header';
+import TextList from './components/TextList';
+import TextData from './data/TextData';
+import TextForm from './components/TextForm';
 
 function App() {
+	const [text, setText] = useState(TextData);
+
+	const deleteText = (id) => {
+		if (window.confirm('Are you sure you want to delete the following text?')) {
+			setText(text.filter((item) => item.id !== id));
+		}
+	}
+
+	const addText = (newText, newResponse) => {
+	  newText.id = uuidv4();
+		newResponse.id = uuidv4();
+		setText([...text, newText, newResponse]);
+	}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+		<>
+			<Header/>
+			<div className='container'>
+				<TextList text={text} handleDelete={deleteText}/>
+				<div>&nbsp;</div>
+				<TextForm handleAdd={addText}/>
+			</div>
+		</>
+	)
 }
 
 export default App;
